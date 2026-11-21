@@ -37,10 +37,13 @@ def api(endpoint, **params):
 
 yt = None
 if TOKEN_JSON:
-    creds = Credentials.from_authorized_user_info(json.loads(TOKEN_JSON))
-    if not creds.valid:
-        creds.refresh(Request())
-    yt = build("youtube", "v3", credentials=creds)
+    try:
+        creds = Credentials.from_authorized_user_info(json.loads(TOKEN_JSON))
+        if not creds.valid:
+            creds.refresh(Request())
+        yt = build("youtube", "v3", credentials=creds)
+    except Exception as e:
+        print(f"Token member bermasalah ({type(e).__name__}), lanjut mode public saja")
 
 def get_videos(cid, tipe):
     pid = ("UUMO" if tipe == "member" else "UU") + cid[2:]
